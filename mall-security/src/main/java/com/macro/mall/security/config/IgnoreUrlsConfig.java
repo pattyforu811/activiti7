@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "secure.ignored")
+@ConfigurationProperties(prefix = "security.ignored")
 @Component
 public class IgnoreUrlsConfig {
 
