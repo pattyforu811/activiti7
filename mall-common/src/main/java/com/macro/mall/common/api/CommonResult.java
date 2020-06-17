@@ -1,6 +1,8 @@
 package com.macro.mall.common.api;
 
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * 通用返回对象

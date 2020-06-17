@@ -42,7 +42,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(this.tokenHeader);
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
             String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
-            String username = jwtTokenUtil.getUserNameFromToken(authToken);
+            String username = jwtTokenUtil.extractUsername(authToken);
             LOGGER.info("checking username:{}", username);
 //            Authentication对象 保存的是用户信息
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

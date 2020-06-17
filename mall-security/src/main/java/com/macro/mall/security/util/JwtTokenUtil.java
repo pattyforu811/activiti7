@@ -33,74 +33,14 @@ public class JwtTokenUtil {
 /*    public String getSubject() {
         return this.getString("sub");
     }*/
-    private static final String CLAIM_KEY_USERNAME = "sub";//sub作为Claims 的 key是固定的
-    private static final String CLAIM_KEY_CREATED = "created";
+   // private static final String CLAIM_KEY_USERNAME = "sub";//sub作为Claims 的 key是固定的
+  //  private static final String CLAIM_KEY_CREATED = "created";
     @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.expiration}")
     private Long expiration;
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
-
-    /**
-     * 生成token的过期时间
-     */
-    private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1000);
-    }
-
-
-
-
-
-    /**
-     * 当原来的token没过期时是可以刷新的
-     *
-     * @param oldToken 带tokenHead的token
-     */
-    public String refreshHeadToken(String oldToken) {
-        if(StrUtil.isEmpty(oldToken)){
-            return null;
-        }
-        String token = oldToken.substring(tokenHead.length());
-        if(StrUtil.isEmpty(token)){
-            return null;
-        }
-        //token校验不通过
-        Claims claims = getClaimsFromToken(token);
-        if(claims==null){
-            return null;
-        }
-        //如果token已经过期，不支持刷新
-        if(isTokenExpired(token)){
-            return null;
-        }
-        //如果token在30分钟之内刚刷新过，返回原token
-        if(tokenRefreshJustBefore(token,30*60)){
-            return token;
-        }else{
-            claims.put(CLAIM_KEY_CREATED, new Date());
-            return generateToken(claims);
-        }
-    }
-
-    /**
-     * 判断token在指定时间内是否刚刚刷新过
-     * @param token 原token
-     * @param time 指定时间（秒）
-     */
-    private boolean tokenRefreshJustBefore(String token, int time) {
-        Claims claims = getClaimsFromToken(token);
-        Date created = claims.get(CLAIM_KEY_CREATED, Date.class);
-        Date refreshDate = new Date();
-        //刷新时间在创建时间的指定时间内
-        if(refreshDate.after(created)&&refreshDate.before(DateUtil.offsetSecond(created,time))){
-            return true;
-        }
-        return false;
-    }
-
-
+   // @Value("${jwt.tokenHead}")
+  //  private String tokenHead;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -144,6 +84,12 @@ public class JwtTokenUtil {
         return extractExpiration(token).before(new Date());
     }
 
+    /**
+     * 生成token的过期时间
+     */
+    private Date generateExpirationDate() {
+        return new Date(System.currentTimeMillis() + expiration * 1000);
+    }
 
 
 
