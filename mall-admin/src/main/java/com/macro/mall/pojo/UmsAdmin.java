@@ -3,12 +3,14 @@ package com.macro.mall.pojo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
+@ToString
 public class UmsAdmin implements Serializable {
     private Long id;
 
@@ -39,7 +41,7 @@ public class UmsAdmin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Override
+ /*   @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
@@ -58,5 +60,5 @@ public class UmsAdmin implements Serializable {
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
-    }
+    }*/
 }

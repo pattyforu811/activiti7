@@ -6,10 +6,16 @@ spring:
       enabled: true #开启文件上传
       max-file-size: 10MB #限制文件上传大小为10M
 
-mybatis:
-  mapper-locations:
-    - classpath:dao/*.xml
-    - classpath*:com/**/mapper/*.xml
+
+#  该配置可以省略，默认MyBatis-plus读取的配置文件就是这个位置
+#classpath: 表示当前工程类路径下的资源
+#classpath*: 表示当前工程类路径下的资源 + 工程引入的其它jar中的资源
+#  多模块项目开发时候，建议使用classpath*
+#
+#mybatis:
+#  mapper-locations:
+#    - classpath:dao/*.xml
+#    - classpath*:com/**/mapper/*.xml
 
 jwt:
   tokenHeader: Authorization #JWT存储的请求头

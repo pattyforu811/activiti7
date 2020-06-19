@@ -13,7 +13,7 @@
     <!-- 项目说明：这里作为聚合工程的父工程 -->
     <groupId>com.macro.mall</groupId>
     <artifactId>activiti</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <!-- 模块说明：这里声明多个子模块 -->
     <modules>
@@ -29,21 +29,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <mall-security.version>1.0-SNAPSHOT</mall-security.version>
-        <mall-common.version>1.0-SNAPSHOT</mall-common.version>
-        <mall-admin.version>1.0-SNAPSHOT</mall-admin.version>
-        <act-web.version>1.0-SNAPSHOT</act-web.version>
+        <mall-security.version>1.0.0-SNAPSHOT</mall-security.version>
+        <mall-common.version>1.0.0-SNAPSHOT</mall-common.version>
+        <mall-admin.version>1.0.0-SNAPSHOT</mall-admin.version>
+        <act-web.version>1.0.0-SNAPSHOT</act-web.version>
         <druid.version>1.1.10</druid.version>
         <hutool.version>4.5.7</hutool.version>
         <swagger2.version>2.7.0</swagger2.version>
-        <mybatis.version>3.4.6</mybatis.version>
         <mysql-connector.version>8.0.15</mysql-connector.version>
         <spring-data-commons.version>2.1.5.RELEASE</spring-data-commons.version>
         <jjwt.version>0.9.0</jjwt.version>
-        <mybatis-plus.version>3.1.0</mybatis-plus.version>
+        <mybatis-plus.version>3.3.2</mybatis-plus.version>
         <pagehelper-starter.version>1.2.10</pagehelper-starter.version>
-<mysql-connector.version>8.0.15</mysql-connector.version>
+        <mysql-connector.version>8.0.15</mysql-connector.version>
         <lombok.version>1.18.10</lombok.version>
+        <activiti-dependencies.version>7.1.123</activiti-dependencies.version>
     </properties>
 
     <dependencies>
@@ -60,7 +60,7 @@
             <optional>true</optional>
         </dependency>
         <!--test-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -70,6 +70,11 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -98,7 +103,7 @@
                 <version>${act-web.version}</version>
             </dependency>
             <!--activiti-->
-            <dependency>
+<!--            <dependency>
                 <groupId>org.activiti</groupId>
                 <artifactId>activiti-spring-boot-starter</artifactId>
                 <version>7.1.0.M5</version>
@@ -108,6 +113,13 @@
                         <artifactId>activiti-spring-identity</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>-->
+            <dependency>
+                <groupId>org.activiti.dependencies</groupId>
+                <artifactId>activiti-dependencies</artifactId>
+                <version>${activiti-dependencies.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
             <!--Mysql数据库驱动-->
             <dependency>
@@ -175,4 +187,15 @@
         </plugins>
     </build>
 -->
+<!--activiti依赖清单在这个respsitory上才有-->
+    <repositories>
+        <repository>
+            <id>alfresco</id>
+            <name>Activiti Releases</name>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
 </project>
