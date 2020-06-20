@@ -1,11 +1,19 @@
 package com.macro.mall.bo;
 
+import com.macro.mall.entity.UmsAdmin;
+import com.macro.mall.entity.UmsPermission;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
+
+    private UmsAdmin umsAdmin;
+    private List<UmsPermission> list;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -14,12 +22,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return umsAdmin.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return umsAdmin.getUsername();
     }
 
     @Override
@@ -39,6 +47,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return umsAdmin.getStatus().equals(1);
     }
 }

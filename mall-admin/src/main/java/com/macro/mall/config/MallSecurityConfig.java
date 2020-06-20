@@ -1,17 +1,14 @@
 package com.macro.mall.config;
-import com.macro.mall.security.component.DynamicSecurityService;
 import com.macro.mall.security.config.SecurityConfig;
-import com.macro.mall.service.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.macro.mall.service.UmsAdminService;
+import com.macro.mall.sys.service.UmsAdminService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Resource;
 
 /**
  * mall-security模块相关配置
@@ -22,8 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MallSecurityConfig extends SecurityConfig {
 
-    @Autowired
-    private AdminService adminService;
+    @Resource
+    private UmsAdminService adminService;
  /*   @Autowired
     private UmsResourceService resourceService;*/
 

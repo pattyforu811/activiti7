@@ -1,7 +1,7 @@
-package com.macro.mall.sys.mapper;
+package com.macro.mall.mapper;
 
-import com.macro.mall.sys.entity.UmsAdmin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.macro.mall.entity.UmsAdmin;
 
 /**
  * 后台用户表(UmsAdmin)表数据库访问层

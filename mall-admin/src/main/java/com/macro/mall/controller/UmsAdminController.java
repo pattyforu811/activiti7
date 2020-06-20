@@ -1,16 +1,17 @@
-package com.macro.mall.sys.controller;
+package com.macro.mall.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.macro.mall.sys.service.UmsAdminService;
-import com.macro.mall.sys.entity.UmsAdmin;
-import com.baomidou.mybatisplus.extension.api.ApiController;
+import com.macro.mall.entity.UmsAdmin;
+import com.macro.mall.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
