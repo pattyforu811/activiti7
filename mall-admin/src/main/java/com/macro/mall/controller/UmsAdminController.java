@@ -4,11 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.macro.mall.common.api.CommonResult;
+import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.entity.UmsAdmin;
 import com.macro.mall.service.UmsAdminService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,4 +95,20 @@ public class UmsAdminController extends ApiController {
     public R delete(@RequestParam("idList") List<Long> idList) {
         return success(this.umsAdminService.removeByIds(idList));
     }
+
+    @ApiOperation(value = "用户注册")
+    @PostMapping(value = "/register")
+    @ResponseBody
+    public CommonResult<UmsAdmin> register(@RequestBody UmsAdminParam umsAdminParam, BindingResult result) {
+        UmsAdmin umsAdmin = adminService.register(umsAdminParam);
+        if (umsAdmin == null) {
+            CommonResult.failed();
+        }
+        return CommonResult.success(umsAdmin);
+    }
+
+
+
+
+
 }

@@ -1,5 +1,8 @@
 package com.macro.mall.entity;
 
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +11,8 @@ import java.io.Serializable;
  * @author makejava
  * @since 2020-06-20 19:42:24
  */
-public class UmsAdminRoleRelation implements Serializable {
+@Data
+public class UmsAdminRoleRelation extends Model<UmsAdminRoleRelation> implements Serializable {
     private static final long serialVersionUID = 295365671663825447L;
     
     private Long id;
@@ -40,6 +44,11 @@ public class UmsAdminRoleRelation implements Serializable {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    @Override
+    protected Serializable pkVal() {
+        return this.id;
     }
 
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.macro.mall.sys.mapper.UmsAdminMapper">
+<mapper namespace="com.macro.mall.mapper.UmsAdminMapper">
 
-    <resultMap type="com.macro.mall.sys.entity.UmsAdmin" id="UmsAdminMap">
+    <resultMap type="com.macro.mall.entity.UmsAdmin" id="UmsAdminMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
@@ -14,5 +14,21 @@
         <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
     </resultMap>
+
+
+<!--    List<UmsPermission> getPermissionList(Long id);-->
+    <select id="getPermissionList" resultType="com.macro.mall.entity.UmsPermission" >
+            select d.value from ums_admin_role_relation a
+                                 left join ums_role b on a.role_id = b.id
+                                 left join ums_role_permission_relation c on b.id = c.permission_id
+                                 left join ums_permission d on c.permission_id = d.id
+                where a.admin_id = #{id}
+        union
+            select c.value from ums_admin a
+                            left join ums_admin_permission_relation b on a.id = b.admin_id
+                            left join ums_permission c on b.permission_id = c.id
+                where a.id = #{id}
+    </select>
+
 
 </mapper>

@@ -1,7 +1,7 @@
 package com.macro.mall.config;
+
 import com.macro.mall.security.config.SecurityConfig;
 import com.macro.mall.service.UmsAdminService;
-import com.macro.mall.sys.service.UmsAdminService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
