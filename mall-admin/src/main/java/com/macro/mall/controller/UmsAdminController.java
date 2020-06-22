@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macro.mall.common.api.CommonResult;
+import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.entity.UmsAdmin;
 import com.macro.mall.service.UmsAdminService;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 后台用户表(UmsAdmin)表服务控制层
@@ -38,7 +41,7 @@ public class UmsAdminController extends ApiController {
     private String tokenHead;
 
     @Resource
-    private UmsAdminService umsAdminService;
+    private UmsAdminService service;
 
     /**
      * 分页查询所有数据
@@ -49,7 +52,7 @@ public class UmsAdminController extends ApiController {
      */
     @GetMapping
     public R selectAll(Page<UmsAdmin> page, UmsAdmin umsAdmin) {
-        return success(this.umsAdminService.page(page, new QueryWrapper<>(umsAdmin)));
+        return success(this.service.page(page, new QueryWrapper<>(umsAdmin)));
     }
 
     /**
@@ -60,7 +63,7 @@ public class UmsAdminController extends ApiController {
      */
     @GetMapping("{id}")
     public R selectOne(@PathVariable Serializable id) {
-        return success(this.umsAdminService.getById(id));
+        return success(this.service.getById(id));
     }
 
     /**
@@ -71,7 +74,7 @@ public class UmsAdminController extends ApiController {
      */
     @PostMapping
     public R insert(@RequestBody UmsAdmin umsAdmin) {
-        return success(this.umsAdminService.save(umsAdmin));
+        return success(this.service.save(umsAdmin));
     }
 
     /**
@@ -82,7 +85,7 @@ public class UmsAdminController extends ApiController {
      */
     @PutMapping
     public R update(@RequestBody UmsAdmin umsAdmin) {
-        return success(this.umsAdminService.updateById(umsAdmin));
+        return success(this.service.updateById(umsAdmin));
     }
 
     /**
@@ -93,20 +96,33 @@ public class UmsAdminController extends ApiController {
      */
     @DeleteMapping
     public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.umsAdminService.removeByIds(idList));
+        return success(this.service.removeByIds(idList));
     }
 
     @ApiOperation(value = "用户注册")
     @PostMapping(value = "/register")
     @ResponseBody
     public CommonResult<UmsAdmin> register(@RequestBody UmsAdminParam umsAdminParam, BindingResult result) {
-        UmsAdmin umsAdmin = adminService.register(umsAdminParam);
+        UmsAdmin umsAdmin = service.register(umsAdminParam);
         if (umsAdmin == null) {
             CommonResult.failed();
         }
         return CommonResult.success(umsAdmin);
     }
 
+    @ApiOperation(value = "登录以后返回token")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<Map<String, String>> login(@RequestBody UmsAdminLoginParam umsAdminLoginParam, BindingResult result) {
+        String token = service.login(umsAdminLoginParam.getUsername(), umsAdminLoginParam.getPassword());
+        if (token == null) {
+            return CommonResult.validateFailed("用户名或密码错误");
+        }
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", token);
+        tokenMap.put("tokenHead", tokenHead);
+        return CommonResult.success(tokenMap);
+    }
 
 
 

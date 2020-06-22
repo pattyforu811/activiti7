@@ -1,5 +1,6 @@
 package com.macro.mall.entity;
 
+import java.util.Date;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,50 +8,49 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * 后台用户表(UmsAdmin)表实体类
+ * 后台用户权限表(UmsPermission)表实体类
  * 
  * @author patty
- * @since 2020-06-19 14:14:07
+ * @since 2020-06-22 10:18:36
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel(description = "")
 @SuppressWarnings("serial")
-public class UmsAdmin extends Model<UmsAdmin> implements Serializable {
-    private static final long serialVersionUID = -61122919768264508L;
+public class UmsPermission extends Model<UmsPermission> implements Serializable {
+    private static final long serialVersionUID = 483534849881164844L;
             
     @ApiModelProperty("$column.comment")
     private Long id;
             
-    @ApiModelProperty("$column.comment")
-    private String username;
+    @ApiModelProperty("父级权限id")
+    private Long pid;
             
-    @ApiModelProperty("$column.comment")
-    private String password;
+    @ApiModelProperty("名称")
+    private String name;
             
-    @ApiModelProperty("头像")
+    @ApiModelProperty("权限值")
+    private String value;
+            
+    @ApiModelProperty("图标")
     private String icon;
             
-    @ApiModelProperty("邮箱")
-    private String email;
+    @ApiModelProperty("权限类型：0->目录；1->菜单；2->按钮（接口绑定权限）")
+    private Integer type;
             
-    @ApiModelProperty("昵称")
-    private String nickName;
+    @ApiModelProperty("前端资源路径")
+    private String uri;
             
-    @ApiModelProperty("备注信息")
-    private String note;
+    @ApiModelProperty("启用状态；0->禁用；1->启用")
+    private Integer status;
             
     @ApiModelProperty("创建时间")
     private Date createTime;
             
-    @ApiModelProperty("最后登录时间")
-    private Date loginTime;
-            
-    @ApiModelProperty("帐号启用状态：0->禁用；1->启用")
-    private Integer status;
+    @ApiModelProperty("排序")
+    private Integer sort;
 
 
     /**
@@ -63,4 +63,3 @@ public class UmsAdmin extends Model<UmsAdmin> implements Serializable {
         return this.id;
     }
     }
-

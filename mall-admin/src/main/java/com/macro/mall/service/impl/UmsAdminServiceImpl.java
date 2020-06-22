@@ -1,18 +1,29 @@
 package com.macro.mall.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.macro.mall.bo.UserDetailsImpl;
+import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.entity.UmsAdmin;
 import com.macro.mall.entity.UmsAdminRoleRelation;
 import com.macro.mall.entity.UmsPermission;
 import com.macro.mall.mapper.UmsAdminMapper;
+import com.macro.mall.security.util.JwtTokenUtil;
 import com.macro.mall.service.UmsAdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +38,10 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
 
     @Resource
     private UmsAdminMapper mapper;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -42,8 +56,67 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
         return null;
     }
 
+    @Override
+    public UmsAdmin register(UmsAdminParam umsAdminParam) {
+
+        UmsAdmin umsAdmin = new UmsAdmin();
+
+        BeanUtil.copyProperties(umsAdminParam, umsAdmin);
+        umsAdmin.setCreateTime(new Date());
+        umsAdmin.setStatus(1);
+
+        //查询是否有相同用户名的用户
+        QueryWrapper<UmsAdmin> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", umsAdmin.getUsername());
+
+        UmsAdmin admin = mapper.selectOne(wrapper);
+        if (admin != null) {
+            return null;
+        }
+
+        String encode = passwordEncoder.encode(umsAdmin.getPassword());
+        umsAdmin.setPassword(encode);
+
+        mapper.insert(umsAdmin);
+
+        return umsAdmin;
+
+    }
+
+    @Override
+    public String login(String username, String password) {
+
+        final String[] token = {null};
+
+        UserDetails userDetails = loadUserByUsername(username);
+        Optional.ofNullable(userDetails)
+                .ifPresent(userDetails1 -> {
+                    if (!passwordEncoder.matches(password, userDetails1.getPassword())) {
+                        throw new BadCredentialsException("密码不正确");
+                    }
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    token[0] = jwtTokenUtil.generateToken(userDetails1);
+
+
+                });
+        return token[0];
+
+/*
+        UmsAdmin umsAdmin = mapper.selectOne(new QueryWrapper<UmsAdmin>()
+                .lambda()
+                .eq(UmsAdmin::getUsername, username)
+                .eq(UmsAdmin::getPassword, password));
+
+        Optional.ofNullable(umsAdmin).ifPresent();
+*/
+
+
+    }
+
     private List<UmsPermission> getPermissionList(Long id) {
-         return mapper.getPermissionList(id);
+        return mapper.getPermissionList(id);
     }
 
     private UmsAdmin getAdminByUsername(String username) {
@@ -53,8 +126,6 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
         if (list.size() > 0) {
             return list.get(0);
         }
-
         return null;
-
     }
 }

@@ -15,4 +15,5 @@ import java.util.List;
 public interface UmsAdminMapper extends BaseMapper<UmsAdmin>{
 
     List<UmsPermission> getPermissionList(Long id);
+
 }

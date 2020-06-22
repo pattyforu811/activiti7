@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Data
 public class UmsAdminRoleRelation extends Model<UmsAdminRoleRelation> implements Serializable {
     private static final long serialVersionUID = 295365671663825447L;
-    
+
     private Long id;
     
     private Long adminId;
