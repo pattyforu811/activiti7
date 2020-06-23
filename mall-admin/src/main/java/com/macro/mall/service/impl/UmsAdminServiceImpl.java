@@ -1,22 +1,21 @@
 package com.macro.mall.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.macro.mall.bo.UserDetailsImpl;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.entity.UmsAdmin;
-import com.macro.mall.entity.UmsAdminRoleRelation;
 import com.macro.mall.entity.UmsPermission;
 import com.macro.mall.mapper.UmsAdminMapper;
 import com.macro.mall.security.util.JwtTokenUtil;
 import com.macro.mall.service.UmsAdminService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 后台用户表(UmsAdmin)表服务实现类
@@ -36,11 +34,13 @@ import java.util.Optional;
 @Service
 public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> implements UmsAdminService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
+
     @Resource
     private UmsAdminMapper mapper;
-    @Autowired
+    @Resource
     private PasswordEncoder passwordEncoder;
-    @Autowired
+    @Resource
     private JwtTokenUtil jwtTokenUtil;
 
     @Override
@@ -86,22 +86,22 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     @Override
     public String login(String username, String password) {
 
-        final String[] token = {null};
-
-        UserDetails userDetails = loadUserByUsername(username);
-        Optional.ofNullable(userDetails)
-                .ifPresent(userDetails1 -> {
-                    if (!passwordEncoder.matches(password, userDetails1.getPassword())) {
-                        throw new BadCredentialsException("密码不正确");
-                    }
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    token[0] = jwtTokenUtil.generateToken(userDetails1);
-
-
-                });
-        return token[0];
+        String token = null;
+        //密码需要客户端加密后传递 错
+        try {
+            UserDetails userDetails = loadUserByUsername(username);
+            if(!passwordEncoder.matches(password,userDetails.getPassword())){
+                throw new BadCredentialsException("密码不正确");
+            }
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            token = jwtTokenUtil.generateToken(userDetails);
+//            updateLoginTimeByUsername(username);
+         //   insertLoginLog(username);
+        } catch (AuthenticationException e) {
+            LOGGER.warn("登录异常:{}", e.getMessage());
+        }
+        return token;
 
 /*
         UmsAdmin umsAdmin = mapper.selectOne(new QueryWrapper<UmsAdmin>()
@@ -120,7 +120,7 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     }
 
     private UmsAdmin getAdminByUsername(String username) {
-        QueryWrapper<UmsAdmin> queryWrapper = new QueryWrapper();
+        QueryWrapper<UmsAdmin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         List<UmsAdmin> list = mapper.selectList(queryWrapper);
         if (list.size() > 0) {

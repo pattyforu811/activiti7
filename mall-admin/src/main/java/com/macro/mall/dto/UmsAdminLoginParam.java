@@ -3,7 +3,6 @@ package com.macro.mall.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
 

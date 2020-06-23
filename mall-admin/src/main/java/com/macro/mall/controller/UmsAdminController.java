@@ -36,12 +36,11 @@ import java.util.Map;
 @RequestMapping("umsAdmin")
 public class UmsAdminController extends ApiController {
     @Value("${jwt.tokenHeader}")
-    private String tokenHeader;
+    private final String tokenHeader;
     @Value("${jwt.tokenHead}")
-    private String tokenHead;
-
+    private final String tokenHead;
     @Resource
-    private UmsAdminService service;
+    private final UmsAdminService service;
 
     /**
      * 分页查询所有数据
@@ -123,8 +122,4 @@ public class UmsAdminController extends ApiController {
         tokenMap.put("tokenHead", tokenHead);
         return CommonResult.success(tokenMap);
     }
-
-
-
-
 }

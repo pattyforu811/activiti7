@@ -1,7 +1,7 @@
 package com.macro.mall;
 
-import com.macro.mall.dao.AdminDao;
-import com.macro.mall.pojo.UmsAdmin;
+import com.macro.mall.entity.UmsAdmin;
+import com.macro.mall.mapper.UmsAdminMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UmsAdminTest {
     @Autowired
-    private AdminDao adminDao;
+    private UmsAdminMapper adminDao;
 
     @Test
 //    @Transactional
