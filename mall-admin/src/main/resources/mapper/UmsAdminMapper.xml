@@ -17,18 +17,29 @@
 
 
 <!--    List<UmsPermission> getPermissionList(Long id);-->
-    <select id="getPermissionList" resultType="com.macro.mall.entity.UmsPermission" >
-            select d.value from ums_admin_role_relation a
+    <select id="getPermissionList" resultMap="com.macro.mall.mapper.UmsPermissionMapper.UmsPermissionMap" >
+            select d.* from ums_admin_role_relation a
                                  left join ums_role b on a.role_id = b.id
-                                 left join ums_role_permission_relation c on b.id = c.permission_id
+                                 left join ums_role_permission_relation c on b.id = c.role_id
                                  left join ums_permission d on c.permission_id = d.id
                 where a.admin_id = #{id}
+                and d.id is not null
+                and d.id not in(
+                  SELECT
+                    b.id
+                FROM
+                    ums_admin_permission_relation a
+                    LEFT JOIN ums_permission b ON a.permission_id = b.id
+                WHERE
+                    a.type = - 1
+                    AND a.admin_id = #{id}
+                )
         union
-            select c.value from ums_admin a
-                            left join ums_admin_permission_relation b on a.id = b.admin_id
-                            left join ums_permission c on b.permission_id = c.id
-                where a.id = #{id}
+            select b.* from ums_admin_permission_relation a
+                            left join ums_permission b on a.permission_id = b.id
+                where
+                    a.type = 1
+                    and a.admin_id = #{id}
+
     </select>
-
-
 </mapper>

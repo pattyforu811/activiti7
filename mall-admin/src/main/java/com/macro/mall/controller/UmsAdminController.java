@@ -9,9 +9,12 @@ import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.entity.UmsAdmin;
 import com.macro.mall.service.UmsAdminService;
+import com.macro.mall.service.impl.UmsAdminServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +25,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 后台用户表(UmsAdmin)表服务控制层
@@ -32,15 +36,17 @@ import java.util.Map;
 @Api(tags = "后台用户表(UmsAdmin)") 
 @Validated
 @RestController
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequestMapping("umsAdmin")
 public class UmsAdminController extends ApiController {
     @Value("${jwt.tokenHeader}")
-    private final String tokenHeader;
+    private  String tokenHeader;
     @Value("${jwt.tokenHead}")
-    private final String tokenHead;
+    private  String tokenHead;
     @Resource
-    private final UmsAdminService service;
+    private  UmsAdminService service;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminController.class);
 
     /**
      * 分页查询所有数据
@@ -113,8 +119,11 @@ public class UmsAdminController extends ApiController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult<Map<String, String>> login(@RequestBody UmsAdminLoginParam umsAdminLoginParam, BindingResult result) {
+
         String token = service.login(umsAdminLoginParam.getUsername(), umsAdminLoginParam.getPassword());
+
         if (token == null) {
+            logger.warn("checkout token is null ");
             return CommonResult.validateFailed("用户名或密码错误");
         }
         Map<String, String> tokenMap = new HashMap<>();

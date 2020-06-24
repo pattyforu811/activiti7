@@ -29,9 +29,11 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
+                //为当前包下controller生成API文档
                 .apis(RequestHandlerSelectors.basePackage("com.macro.mall.controller"))
                 .paths(PathSelectors.any())
                 .build()
+                //添加登录认证
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts());
     }
@@ -56,7 +58,7 @@ public class Swagger2Config {
     private List<SecurityContext> securityContexts() {
         //设置需要登录认证的路径
         List<SecurityContext> result = new ArrayList<>();
-        result.add(getContextByPath("/brand/.*"));
+        result.add(getContextByPath("/umsAdmin/.*"));
         result.add(getContextByPath("/product/.*"));
         result.add(getContextByPath("/productCategory/.*"));
         return result;

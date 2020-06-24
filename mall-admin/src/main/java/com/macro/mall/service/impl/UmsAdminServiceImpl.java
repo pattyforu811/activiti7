@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 后台用户表(UmsAdmin)表服务实现类
@@ -34,7 +35,7 @@ import java.util.List;
 @Service
 public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> implements UmsAdminService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
+        private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
 
     @Resource
     private UmsAdminMapper mapper;
@@ -87,19 +88,21 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     public String login(String username, String password) {
 
         String token = null;
-        //密码需要客户端加密后传递 错
+        //密码需要客户端加密后传递
         try {
             UserDetails userDetails = loadUserByUsername(username);
-            if(!passwordEncoder.matches(password,userDetails.getPassword())){
+            Optional.ofNullable(userDetails).orElseThrow(() -> new BadCredentialsException("用户名不正确"));
+//            Optional.ofNullable(userDetails).orElseGet(() -> userDetails);
+            if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                 throw new BadCredentialsException("密码不正确");
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             token = jwtTokenUtil.generateToken(userDetails);
 //            updateLoginTimeByUsername(username);
-         //   insertLoginLog(username);
+            //   insertLoginLog(username);
         } catch (AuthenticationException e) {
-            LOGGER.warn("登录异常:{}", e.getMessage());
+            LOGGER.warn("登录异常:{}", e.getMessage());//BadCredentialsException
         }
         return token;
 
@@ -120,12 +123,16 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
     }
 
     private UmsAdmin getAdminByUsername(String username) {
-        QueryWrapper<UmsAdmin> queryWrapper = new QueryWrapper<>();
+/*        QueryWrapper<UmsAdmin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         List<UmsAdmin> list = mapper.selectList(queryWrapper);
         if (list.size() > 0) {
             return list.get(0);
         }
-        return null;
+        return null;*/
+
+
+        UmsAdmin umsAdmin = mapper.selectOne(new QueryWrapper<UmsAdmin>().lambda().eq(UmsAdmin::getUsername, username));
+        return umsAdmin;
     }
 }
