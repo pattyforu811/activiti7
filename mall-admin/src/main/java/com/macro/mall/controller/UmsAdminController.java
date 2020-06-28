@@ -9,13 +9,12 @@ import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.entity.UmsAdmin;
 import com.macro.mall.service.UmsAdminService;
-import com.macro.mall.service.impl.UmsAdminServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 后台用户表(UmsAdmin)表服务控制层
@@ -56,7 +54,11 @@ public class UmsAdminController extends ApiController {
      * @return 所有数据
      */
     @GetMapping
+//    @PreAuthorize(value = "pms:product:read")
+//    @PreAuthorize("hasAuthority('pms:brand:read')")//有权限
+    @PreAuthorize("hasAuthority('pms:product:read')")
     public R selectAll(Page<UmsAdmin> page, UmsAdmin umsAdmin) {
+        LOGGER.warn("test---------=====++++++++++++====-----------");
         return success(this.service.page(page, new QueryWrapper<>(umsAdmin)));
     }
 
@@ -110,7 +112,7 @@ public class UmsAdminController extends ApiController {
     public CommonResult<UmsAdmin> register(@RequestBody UmsAdminParam umsAdminParam, BindingResult result) {
         UmsAdmin umsAdmin = service.register(umsAdminParam);
         if (umsAdmin == null) {
-            CommonResult.failed();
+            return CommonResult.failed("用户名重复");
         }
         return CommonResult.success(umsAdmin);
     }

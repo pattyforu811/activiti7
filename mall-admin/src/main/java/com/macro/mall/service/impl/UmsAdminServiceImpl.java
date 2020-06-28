@@ -35,7 +35,7 @@ import java.util.Optional;
 @Service
 public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> implements UmsAdminService {
 
-        private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
 
     @Resource
     private UmsAdminMapper mapper;
@@ -50,7 +50,7 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
 
         if (umsAdmin != null) {
             List<UmsPermission> list = getPermissionList(umsAdmin.getId());
-            new UserDetailsImpl(umsAdmin, list);
+          return  new UserDetailsImpl(umsAdmin, list);
         }
 
 
@@ -98,6 +98,7 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper, UmsAdmin> i
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+          //  org.activiti.engine.impl.identity.Authentication.setAuthenticatedUserId(username);
             token = jwtTokenUtil.generateToken(userDetails);
 //            updateLoginTimeByUsername(username);
             //   insertLoginLog(username);

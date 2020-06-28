@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -22,7 +23,8 @@ public class UserDetailsImpl implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //返回当前用户的权限/角色
         return list.stream()
-                .filter(umsPermission -> !umsPermission.getValue().isEmpty())
+//                .filter(umsPermission -> !umsPermission.getValue().isEmpty())
+                .filter(umsPermission -> umsPermission.getValue()!=null)
                 .map(umsPermission -> new SimpleGrantedAuthority(umsPermission.getValue()))
                 .collect(Collectors.toList());
     }

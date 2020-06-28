@@ -21,6 +21,7 @@
         <module>mall-security</module>
         <module>mall-common</module>
         <module>mall-admin</module>
+        <module>mall-activiti</module>
     </modules>
 
     <!--    版本号属性-->
@@ -79,6 +80,12 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

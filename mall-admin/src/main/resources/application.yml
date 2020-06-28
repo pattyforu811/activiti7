@@ -8,6 +8,19 @@ spring:
       enabled: true #开启文件上传
       max-file-size: 10MB #限制文件上传大小为10M
 
+  activiti:
+    #1.flase： 默认值。activiti在启动时，会对比数据库表中保存的版本，如果没有表或者版本不匹配，将抛出异常
+    #2.true： activiti会对数据库中所有表进行更新操作。如果表不存在，则自动创建
+    #3.create_drop： 在activiti启动时创建表，在关闭时删除表（必须手动关闭引擎，才能删除表）
+    #4.drop-create： 在activiti启动时删除原来的旧表，然后在创建新表（不需要手动关闭引擎）
+#    database-schema-update: true
+    #检测历史表是否存在
+    db-history-used: true
+    #记录历史等级 可配置的历史级别有none, activity, audit, full
+    history-level: full
+    #校验流程文件，默认校验resources下的processes文件夹里的流程文件
+    check-process-definitions: false
+
 
 #  该配置可以省略，默认MyBatis-plus读取的配置文件就是这个位置
 #classpath: 表示当前工程类路径下的资源
@@ -16,14 +29,18 @@ spring:
 #
 #mybatis:
 #  mapper-locations:
-#    - classpath:dao/*.xml
+#    - classpath:mapper/*.xml
 #    - classpath*:com/**/mapper/*.xml
+mybatis-plus:
+  mapper-locations:
+    - classpath:mapper/*.xml
 
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
   secret: mall-admin-secret #JWT加解密使用的密钥
   expiration: 604800 #JWT的超期限时间(60*60*24)
   tokenHead: Bearer  #JWT负载中拿到开头
+  #Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE1OTM5MTkzNDh9.hY27RJZfNqKdeo6k2o_zM06rHHS_KOW38XiWq-TSTIURy2Y4v63C6zvyCMH60y4iu0AxnkpO2Q4W5yM0nUaSZw
 
 security:
   ignored:
