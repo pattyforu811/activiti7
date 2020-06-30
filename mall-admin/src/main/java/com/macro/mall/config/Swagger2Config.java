@@ -41,8 +41,8 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("activiti7后台系统")
-                .description("activiti7后台模块")
-                .contact("macro")
+//                .description("activiti7后台模块")
+//                .contact("macro")
                 .version("1.0")
                 .build();
     }

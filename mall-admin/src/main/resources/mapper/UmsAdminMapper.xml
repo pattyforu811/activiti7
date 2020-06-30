@@ -17,7 +17,8 @@
 
 
 <!--    List<UmsPermission> getPermissionList(Long id);-->
-    <select id="getPermissionList" resultMap="com.macro.mall.mapper.UmsPermissionMapper.UmsPermissionMap" >
+<!--    <select id="getPermissionList" resultMap="com.macro.mall.mapper.UmsPermissionMapper.UmsPermissionMap" >-->
+    <select id="getPermissionList" resultType="com.macro.mall.entity.UmsPermission" >
             select d.* from ums_admin_role_relation a
                                  left join ums_role b on a.role_id = b.id
                                  left join ums_role_permission_relation c on b.id = c.role_id

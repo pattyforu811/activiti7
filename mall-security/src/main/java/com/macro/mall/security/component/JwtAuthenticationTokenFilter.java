@@ -1,9 +1,11 @@
 package com.macro.mall.security.component;
 
 import com.macro.mall.security.util.JwtTokenUtil;
+import org.activiti.engine.impl.identity.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);
+//    @Qualifier("customUserDetailsService")
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
@@ -52,7 +55,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     LOGGER.info("authenticated user:{}", username);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                   // org.activiti.engine.impl.identity.Authentication.setAuthenticatedUserId(username);
+                    Authentication.setAuthenticatedUserId(username);
                 }
             }
         }

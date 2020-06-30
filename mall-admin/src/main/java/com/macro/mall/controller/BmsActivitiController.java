@@ -3,6 +3,7 @@ package com.macro.mall.controller;
 import io.swagger.annotations.Api;
 import org.activiti.api.process.model.ProcessDefinition;
 import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
 import org.activiti.api.task.runtime.TaskRuntime;
 import org.slf4j.Logger;
@@ -20,29 +21,27 @@ import org.springframework.web.bind.annotation.RestController;
  * @author patty
  * @since 2020-06-19 14:40:27
  */
-@Api(tags = "ActivitiTest")
+@Api(tags = "Activiti测试")
 @Validated
 @RestController
 @RequestMapping("activiti")
-@PreAuthorize("hasRole('ACTIVITI_USER')")
+//@PreAuthorize("hasRole('ACTIVITI_USER')")
 public class BmsActivitiController {
     private Logger logger = LoggerFactory.getLogger(BmsActivitiController.class);
 
-//    @Autowired
+    @Autowired
     private ProcessRuntime processRuntime;
-//    @Autowired
+    @Autowired
     private TaskRuntime taskRuntime;
 
 
     /**
      * process definitions
      */
-    @GetMapping
-//    @PreAuthorize(value = "pms:product:read")
+    @GetMapping("/processDefinition")
 //    @PreAuthorize("hasAuthority('pms:brand:read')")//有权限
-    public void ProcessDefinition() {
-
-        org.activiti.api.runtime.shared.query.Page<ProcessDefinition> processDefinitionPage = processRuntime.processDefinitions(Pageable.of(0, 10));
+    public void processDefinition() {
+        Page<ProcessDefinition> processDefinitionPage = processRuntime.processDefinitions(Pageable.of(0, 10));
         logger.info("> Available Process definitions: " + processDefinitionPage.getTotalItems());
         for (ProcessDefinition pd : processDefinitionPage.getContent()) {
             logger.info("\t > Process definition: " + pd);

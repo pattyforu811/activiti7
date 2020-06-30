@@ -55,8 +55,8 @@ public class UmsAdminController extends ApiController {
      */
     @GetMapping
 //    @PreAuthorize(value = "pms:product:read")
-//    @PreAuthorize("hasAuthority('pms:brand:read')")//有权限
-    @PreAuthorize("hasAuthority('pms:product:read')")
+    @PreAuthorize("hasAuthority('pms:brand:read')")//有权限
+//    @PreAuthorize("hasAuthority('pms:product:read')")
     public R selectAll(Page<UmsAdmin> page, UmsAdmin umsAdmin) {
         LOGGER.warn("test---------=====++++++++++++====-----------");
         return success(this.service.page(page, new QueryWrapper<>(umsAdmin)));

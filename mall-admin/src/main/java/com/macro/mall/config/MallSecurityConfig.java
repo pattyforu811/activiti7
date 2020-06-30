@@ -2,6 +2,7 @@ package com.macro.mall.config;
 
 import com.macro.mall.security.config.SecurityConfig;
 import com.macro.mall.service.UmsAdminService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -25,8 +26,9 @@ public class MallSecurityConfig extends SecurityConfig {
     private UmsResourceService resourceService;*/
 
     @Bean
+//    @ConditionalOnMissingBean
     public UserDetailsService userDetailsService() {
-        //获取登录用户信息
+//        获取登录用户信息
         return username -> adminService.loadUserByUsername(username);
     }
 
