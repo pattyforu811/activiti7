@@ -5,20 +5,15 @@ import org.activiti.api.process.model.ProcessDefinition;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.runtime.ProcessRuntime;
-import org.activiti.api.process.runtime.connector.Connector;
-import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
 import org.activiti.api.task.runtime.TaskRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * activitiTest
@@ -53,6 +48,10 @@ public class BmsActivitiController {
     }
 
 
+    /**
+     * 只是查询数据库中定义好的流程
+     * @return
+     */
     @GetMapping("/process-definitions")
     public List<ProcessDefinition> getProcessDefinition(){
         return processRuntime.processDefinitions(Pageable.of(0, 100)).getContent();
@@ -63,22 +62,6 @@ public class BmsActivitiController {
         }*/
     }
 
-    @Bean
-    public Connector processTextConnector() {
-        return integrationContext -> {
-            Map<String, Object> inBoundVariables = integrationContext.getInBoundVariables();
-            String contentToProcess = (String) inBoundVariables.get("fileContent");
-            // Logic Here to decide if content is approved or not
-            if (contentToProcess.contains("activiti")) {
-                integrationContext.addOutBoundVariable("approved",
-                        true);
-            } else {
-                integrationContext.addOutBoundVariable("approved",
-                        false);
-            }
-            return integrationContext;
-        };
-    }
 
 
 }
